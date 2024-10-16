@@ -4,17 +4,30 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.empty.ui.theme.EmptyTheme
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.result.PostgrestResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 
 val supabase = createSupabaseClient(
     supabaseUrl = "https://wjfuzjxiiytaaexsdngf.supabase.co",
@@ -22,8 +35,13 @@ val supabase = createSupabaseClient(
 ) {
     install(Auth)
     install(Postgrest)
-    //install other modules
+    //install other modules 
 }
+@Serializable
+data class User(
+    val id: Int,
+    val firstName: String
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,20 +50,29 @@ class MainActivity : ComponentActivity() {
         setContent {
             EmptyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    Greeting(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
+suspend fun getName(): String {
+    val fname = supabase.from("Users").select(columns = Columns.list("firstName")).decodeSingle<String>()
+    return fname;
+}
+
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(modifier: Modifier = Modifier) {
+    var name by remember { mutableStateOf("") }
+    LaunchedEffect(Unit)
+    {
+        withContext(Dispatchers.IO) {
+           name = getName()
+        }
+    }
     Text(
-        text = "Hello $name!",
+        text = if (name.isEmpty()) "Wait..." else "Hello $name!",
         modifier = modifier
     )
 }
@@ -54,6 +81,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     EmptyTheme {
-        Greeting("Android")
+        Greeting()
     }
 }
