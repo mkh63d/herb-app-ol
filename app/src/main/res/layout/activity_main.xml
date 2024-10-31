@@ -12,46 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true" />
-    <!--TODO: CHANGE A CAMERA BUTTON SETUP F.G. SIZE, PLACE ETC. -->
-    <ImageButton
-        android:id="@+id/captureIB"
-        android:layout_width="60dp"
+
+    <Button
+        android:id="@+id/cameraMode"
+        android:layout_width="105dp"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:background="?attr/selectableItemBackground"
-        android:contentDescription="Capture image button"
+        android:contentDescription="Camera mode"
         android:scaleType="centerCrop"
-        android:src="@drawable/baseline_camera_24"
+        android:text="Camera"
         app:tint="@color/white" />
-
-    <ImageButton
-        android:id="@+id/flashToggleIB"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="?attr/selectableItemBackground"
-        android:contentDescription="Toggle of the flash"
-        android:scaleType="centerCrop"
-        android:src="@drawable/baseline_flash_off_24"
-        app:tint="@color/white" />
-
-    <ImageButton
-        android:id="@+id/flipCameraIB"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="60dp"
-        android:layout_marginBottom="30dp"
-        android:layout_toEndOf="@id/captureIB"
-        android:background="?attr/selectableItemBackground"
-        android:contentDescription="Flip camera button"
-        android:scaleType="centerCrop"
-        android:src="@drawable/baseline_flip_camera_android_24"
-        app:tint="@color/white" />
-
 </RelativeLayout>

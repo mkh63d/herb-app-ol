@@ -82,4 +82,7 @@ dependencies {
     implementation(platform("io.github.jan-tennert.supabase:bom:3.0.1"))
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.ktor:ktor-client-android:3.0.0")
+
+    // dotenv-vault-kotlin
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.2")
 }
