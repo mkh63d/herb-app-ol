@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.empty.databinding.ActivityMainBinding
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
@@ -40,6 +42,8 @@ data class User(
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var navController: NavController
+
     private val mainBinding : ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -47,6 +51,22 @@ class MainActivity : AppCompatActivity() {
     private val dotenv = dotenv {
         directory = "/assets"
         filename = "env"
+    }
+
+    //region onCreate
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            SupabaseApp()
+        }
+        setContentView(R.layout.activity_main)
+    }
+    //endregion
+
+    override fun onSupportNavigateUp(): Boolean {
+        navController = findNavController(R.id.navHostFragmentContainerView)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     //region Supabase client initialization
@@ -68,22 +88,6 @@ class MainActivity : AppCompatActivity() {
         null
     }
 
-    //endregion
-
-    //region onCreate
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            SupabaseApp()
-        }
-        setContentView(mainBinding.root)
-
-        mainBinding.cameraMode.setOnClickListener{
-            //CameraActivity.start(this)
-            //TODO Set up NavController
-        }
-    }
     //endregion
 
     //region Supabase setup

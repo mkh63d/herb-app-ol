@@ -13,15 +13,15 @@ import androidx.camera.core.resolutionselector.AspectRatioStrategy
 import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import com.empty.databinding.CameraActivityBinding
+import com.empty.databinding.ActivityCameraBinding
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.abs
 
 class CameraActivity : AppCompatActivity() {
-    private val binding : CameraActivityBinding by lazy {
-        CameraActivityBinding.inflate(layoutInflater)
+    private val binding : ActivityCameraBinding by lazy {
+        ActivityCameraBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
