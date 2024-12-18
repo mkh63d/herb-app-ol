@@ -29,6 +29,8 @@ class CameraActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        startCamera()
+
         binding.flipCameraIB.setOnClickListener{
             lensFacing = if (lensFacing == CameraSelector.LENS_FACING_FRONT){
                 CameraSelector.LENS_FACING_BACK

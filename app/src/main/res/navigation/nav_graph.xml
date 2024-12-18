@@ -19,6 +19,7 @@
     </fragment>
     <activity
         android:id="@+id/cameraActivity"
+        android:name="com.empty.CameraActivity"
         android:label="activity_camera"
         tools:layout="@layout/activity_camera" />
     <fragment
