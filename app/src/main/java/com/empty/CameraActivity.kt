@@ -1,7 +1,11 @@
 package com.empty
 
+import android.content.Intent
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.AspectRatio
@@ -40,10 +44,10 @@ class CameraActivity : AppCompatActivity() {
             bindCameraUserCases()
         }
         binding.flashToggleIB.setOnClickListener{
-            takePhoto()
+            setFlashIcon(camera)
         }
         binding.captureIB.setOnClickListener{
-            setFlashIcon(camera)
+            takePhoto()
         }
     }
 
@@ -124,6 +128,55 @@ class CameraActivity : AppCompatActivity() {
 
     //region CameraX actions
 
+    //endregion
+    public fun takePhoto() {
+        val imageFolder = File(
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES) ,"EmptyApp"
+        )
+
+        if (!imageFolder.exists()){
+            imageFolder.mkdirs()
+        }
+
+        val fileName = SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.getDefault())
+            .format(System.currentTimeMillis()) + ".jpg"
+        val imageFile = File(imageFolder, fileName)
+        val outputOption = ImageCapture.OutputFileOptions.Builder(imageFile).build()
+
+        imageCapture.takePicture(
+            outputOption,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    val filePath = imageFile.absolutePath
+                    Toast.makeText(
+                        this@CameraActivity,
+                        "Photo saved: $filePath",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    // Update the gallery
+                    MediaScannerConnection.scanFile(
+                        this@CameraActivity,
+                        arrayOf(filePath),
+                        arrayOf("image/jpeg"),
+                        null
+                    )
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    Log.e("CameraActivity", "Error capturing photo: ${exception.message}")
+                    Toast.makeText(
+                        this@CameraActivity,
+                        exception.message.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        )
+    }
+
     public fun setFlashIcon(camera: Camera) {
         if(camera.cameraInfo.hasFlashUnit()){
             if(camera.cameraInfo.torchState.value == 0){
@@ -141,43 +194,4 @@ class CameraActivity : AppCompatActivity() {
             binding.flashToggleIB.isEnabled = false
         }
     }
-
-    public fun takePhoto() {
-        val imageFolder = File(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES) ,"Images"
-        )
-        if(!imageFolder.exists()){
-            imageFolder.mkdir()
-        }
-
-        val fileName = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault())
-            .format(System.currentTimeMillis()) + ".jpg"
-        val imageFile = File(imageFolder, fileName)
-        val outputOption = ImageCapture.OutputFileOptions.Builder(imageFile).build()
-
-        imageCapture.takePicture(
-            outputOption,
-            ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val message = "Photo Capture Succeeded: ${outputFileResults.savedUri}"
-                    Toast.makeText(
-                        this@CameraActivity,
-                        message,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-                override fun onError(exception: ImageCaptureException) {
-                    Toast.makeText(
-                        this@CameraActivity,
-                        exception.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        )
-    }
-    //endregion
 }

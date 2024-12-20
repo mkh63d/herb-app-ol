@@ -46,7 +46,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".CameraActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="activity_camera"
             android:theme="@style/Theme.AppCompat" />
     </application>
